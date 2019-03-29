@@ -1,0 +1,32 @@
+body {
+  font-family: monospace;
+  background-color: #303030;
+}
+
+div.box {
+  width: 300px;
+  margin: auto;
+  background: rgba(255,255,255,0.7);
+  padding: 15px 30px 15px 30px;
+}
+
+input {
+  font-family: inherit;
+  margin: 2px;
+}
+
+input:focus {
+  background-color: rgba(204, 255, 255, 0.6);
+}
+
+button {
+  font-family: inherit;
+}
+
+h2 {
+  margin-top: 0px;
+}
+
+h1:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>All aBoard Message Board</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;">All aBoard Message Board</h1>
+
+  <div class="box">
+    <form action="login.py" method="post">
+    Username:<input type="text" name="user"><br>
+    Password:<input type="password" name="pass"><br><br>
+    <input type="submit" value="Log In" style="display: block; margin: auto;">
+    </form>
+  </div><br>
+  <div class="box">
+    <a href="signup.html">Register</a>
+  </div>
+
+  <!-- ***************************************************************
+     Below this point is text you should include on every SY306 page
+     *************************************************************** -->
+  <!-- Below are scripts which create a button you can click on to validate your page.
+       The background will load green or red if the HTML is valid or not.
+       The time at which the page was last modified will also be displayed below the button -->
+<link href="http://courses.cyber.usna.edu/SY306/docs/check.css" rel="stylesheet">
+
+  <script>
+    document.write('<div id="response"><a href="http://csmidn.academy.usna.edu:8888/?showsource=yes&doc=' + document.location + '">' +
+               '<img src="http://courses.cyber.usna.edu/SY306/docs/check.py"' + 'alt="HTML Check" height="60" />' +
+               '</a><div id="time"></div></div>');
+  </script>
+  <script src="http://courses.cyber.usna.edu/SY306/docs/time.js" ></script>
+
+</body>
+</html>
