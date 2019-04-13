@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#Created:29Mar19 Author:
+#Created:29Mar19 Author: Yixin Ye
 #Description: Handles signup actions from signup.html, perform input validation and updates database
 
 import mysql.connector #library for database being used
@@ -24,6 +24,7 @@ print("""
   <title>All aBoard Message Board</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" href="bubble.ico"/>
 </head>
 <body>
   <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.html';">All aBoard Message Board</h1>
