@@ -26,7 +26,7 @@ print("""
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;">All aBoard Message Board</h1>
+  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.html';">All aBoard Message Board</h1>
 
   <div class="box">
   """)

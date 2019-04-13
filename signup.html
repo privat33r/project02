@@ -6,21 +6,60 @@
   <title>All aBoard Message Board - Register</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="styles.css">
+
+  <script>
+  function submitValidation(){
+    var pw1 = document.getElementById("pass").value;
+    var pw2 = document.getElementById("pass2").value;
+    var user = document.getElementById("user").value;
+
+    if (pw1 === pw2){
+      if (user.length < 3){
+        document.getElementById("user").style = 'border: 3px solid rgba(255,0,0,0.8)';
+        document.getElementById("error").innerHTML = 'Username cannot be less than 3 characters long.<br><br>';
+        return false;
+      }
+
+      else if (pw1.length < 6){
+        document.getElementById("pass").style = 'border: 3px solid rgba(255,0,0,0.8)';
+        document.getElementById("error").innerHTML = 'Password need to be at least 6 characters.<br><br>';
+        return false;
+      }
+
+      else if (!/\d/.test(pw1)) {
+        document.getElementById("pass").style = 'border: 3px solid rgba(255,0,0,0.8)';
+        document.getElementById("error").innerHTML = 'Password needs to contain at least one number.<br><br>';
+        return false;
+      }
+    }
+
+    else {
+      document.getElementById("pass2").style = 'border: 3px solid rgba(255,0,0,0.8)';
+      document.getElementById("error").innerHTML = 'Passwords do not match.<br><br>';
+      return false;
+    }
+
+    return true;
+  }
+
+  </script>
+
 </head>
 <body>
-  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;">All aBoard Message Board</h1>
+  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.html';">All aBoard Message Board</h1>
 
   <div class="box">
     <h2 style="text-align: center;">Registration</h2>
-    <form action="signup.py" method="post">
-    Username:<input type="text" name="user"><br>
-    Password:<input type="password" name="pass"><br>
-    Confirm Password:<input type="password" name="pass2"><br><br>
+    <form action="signup.py" method="post" onsubmit="return submitValidation();">
+    Username:<input type="text" id="user" name="user"><br>
+    Password:<input type="password" id="pass" name="pass"><br>
+    Confirm Password:<input type="password" id="pass2" name="pass2"><br><br>
+    <span id="error"></span>
     <input type="submit" value="Register" style="display: block; margin: auto;">
     </form>
   </div><br>
   <div class="box">
-    <a href="signup.html">Register</a>
+    <a href="index.html">Home</a>
   </div>
 
   <!-- ***************************************************************
