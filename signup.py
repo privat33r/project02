@@ -10,8 +10,10 @@ import sys
 import re
 import cgi
 import cgitb; cgitb.enable()
+from helper import End # neat way of ending the page
+import hashlib
 
-from inputClass import Input #
+from inputClass import Input #this is to escape characters when dealing with user inputs
 
 print("Content-Type: text/html")
 print()
@@ -27,7 +29,6 @@ print("""
   <h1 style="margin-top: 100px; text-align: center; color: #ffffff;">All aBoard Message Board</h1>
 
   <div class="box">
-  <h2 style="text-align: center;">Registration Successful!</h2>
   """)
 
 try:
@@ -42,7 +43,8 @@ except mysql.connector.Error as err:
     print("Database does not exist<br>")
   else:
     print(err)
-  print("Fix your code or Contact the system admin<br></div></body></html>")
+  print("Fix your code or contact the system admin.<br>")
+  End()
   sys.exit(1)
 
 form = cgi.FieldStorage()
@@ -51,26 +53,62 @@ user = Input(form.getvalue('user'))
 password = Input(form.getvalue('pass'))
 password2 = Input(form.getvalue('pass2'))
 
-print("Your account <i>{0}</i> has been successfully registered!".format(user))
+# Checks if username is already taken
+cursor.execute("SELECT * FROM USERS")
 
-print("""
-  </div>
+for row in cursor:
+  # print("{0}".format(row[1]))
+  if user.content == row[1]:
+    print("""<h2 style="text-align: center;">Registration Failed</h2>""")
+    print("Username already taken! Please try another username.<br><br>")
+    print('<button onclick="window.history.back();">Go Back</button>')
+    End()
+    sys.exit(0)
 
-  <!-- ***************************************************************
-     Below this point is text you should include on every SY306 page
-     *************************************************************** -->
-  <!-- Below are scripts which create a button you can click on to validate your page.
-       The background will load green or red if the HTML is valid or not.
-       The time at which the page was last modified will also be displayed below the button -->
-<link href="http://courses.cyber.usna.edu/SY306/docs/check.css" rel="stylesheet">
+# Checks if passwords match
+if password.content != password2.content: #checks if passwords match
+  print("""<h2 style="text-align: center;">Registration Failed</h2>""")
+  print("Passwords do not match! Registration failed.<br><br>")
+  print('<button onclick="window.history.back();">Go Back</button>')
+  End()
+  sys.exit(0)
 
-  <script>
-    document.write('<div id="response"><a href="http://csmidn.academy.usna.edu:8888/?showsource=yes&doc=' + document.location + '">' +
-               '<img src="http://courses.cyber.usna.edu/SY306/docs/check.py"' + 'alt="HTML Check" height="60" />' +
-               '</a><div id="time"></div></div>');
-  </script>
-  <script src="http://courses.cyber.usna.edu/SY306/docs/time.js" ></script>
+# Checks if password has number and meets minimum length
+pwTest = re.search(r"\d",password.content)
+if pwTest == None:
+  print("""<h2 style="text-align: center;">Registration Failed</h2>""")
+  print("Password needs at least one number! Registration failed.<br><br>")
+  print('<button onclick="window.history.back();">Go Back</button>')
+  End()
+  sys.exit(0)
 
-</body>
-</html>
-""")
+if len(password.content) < 6:
+  print("""<h2 style="text-align: center;">Registration Failed</h2>""")
+  print("Password needs to be at least 6 characters long! Registration failed.<br><br>")
+  print('<button onclick="window.history.back();">Go Back</button>')
+  End()
+  sys.exit(0)
+
+# Passed all checks, preparing query
+query = "INSERT INTO USERS (Username,Password,Admin) VALUES (%s,%s,0);"
+hash256 = hashlib.sha256()
+prepared = password.content + user.content
+hash256.update(prepared.encode())
+pwHash = hash256.hexdigest()
+
+try:
+  cursor.execute(query,(user.content,pwHash))
+  cursor.close()
+  conn.commit()
+  conn.close()
+except mysql.connector.Error as err:
+  #for DEBUG only we'll print the error and statement- we should print some generic message instead of production site
+  print ('<p style = "color:red">')
+  print(err)
+  print (" for statement" + cursor.statement )
+  print ('</p>')
+
+print("Your account <i>{0}</i> has been successfully registered!".format(user.html()))
+
+
+End()
