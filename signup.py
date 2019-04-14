@@ -103,7 +103,7 @@ except mysql.connector.Error as err:
 
 print("""<h2 style="text-align: center;">Registration Successful</h2>""")
 print("Your account <i>{0}</i> has been successfully registered!<br><br>".format(user.html()))
-print('<button onclick="window.location.href=\'index.py\';">Home</button>')
+print('<button onclick="window.location.href=\'login.html\';">Log in</button>')
 
 
 End()

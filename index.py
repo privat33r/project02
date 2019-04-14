@@ -47,7 +47,7 @@ if not string_cookie:
           cookie['sid']['expires'] = 7 * 24 * 60 * 60
           isSession = True
           uid = row[0]
-          if row[3] == "1":
+          if row[3] == 1:
             isAdmin = True
 
 else:
@@ -68,23 +68,32 @@ else:
           isSession = True
           uid = row[0]
           cookie['sid']['expires'] = 7 * 24 * 60 * 60 #Renews the cookie
-          if row[3] == "1":
+          if row[3] == 1:
             isAdmin = True
-    isSession = True
 
 if isSession:
 
   cgitb.enable()
   form = cgi.FieldStorage()
 
-  uidPost = Input(form.getvalue('uid'))
+  uidPost = Input(form.getvalue('uidPost'))
   message = Input(form.getvalue('msg'))
 
   if uidPost.content != "None":
     if message.content == "None":
       message.content = "<empty message>"
-    query = "INSERT INTO MESSAGES (UserID,Message) VALUES (%s,%s);"
-    cursor.execute(query,(uidPost.content,message.html()))
+    query = "INSERT INTO MESSAGES (UserID,Message,Timestamp) VALUES (%s,%s,FROM_UNIXTIME(%s));"
+    cursor.execute(query,(uidPost.content,message.html(),time.time()))
+
+
+  delPost = Input(form.getvalue('del'))
+  delMsgID = Input(form.getvalue('msgID'))
+  uidDel = Input(form.getvalue('uidDel'))
+
+  if delPost.content != "None":
+    if (int(uidDel.content) == uid) or isAdmin:
+      query = "delete from MESSAGES where MessageID = %s;"
+      cursor.execute(query,(delMsgID.content,))
 
   print(cookie)
 
@@ -93,20 +102,59 @@ if isSession:
   session_file = '/tmp/sess_' + sid
   session = shelve.open(session_file, writeback=True)
 
-  print("<table style='border: 1px;'><tr><th>User</th><th>Message</th></tr>")
-  cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID;") # stores result from the query
-  for row in cursor:
-    print('<tr><td>{0}</td><td>{1}</td></tr>'.format(row[4],row[2]))
-  print("</table>")
+  if not isAdmin:
+
+    print("<table style='border: 1px; width: 100%;'><tr> <th>User</th> <th>Message</th> <th>Timestamp</th> <th>Delete</th></tr>")
+    cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID;") # stores result from the query
+    for row in cursor:
+      print('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>'.format(row[5],row[2],row[3]))
+      if row[1] == uid:
+        print("""<form method="post" action="index.py">
+        <input type="hidden" name="del" value="1">
+        <input type="hidden" name="msgID" value=\"""".format(row[5],row[2]),end="")
+        print(row[0],end="")
+
+        print("""\">
+
+        <input type="hidden" name="uidDel" value=\"""",end="")
+        print(uid,end="") #This will identify the user when posting messages
+        print("""\">
+
+        <input type="submit" value="[d]" style="display: block; margin: auto;"></form>
+        """)
+      print("""</td></tr>""")
+    print("</table>")
+
+  else:
+
+    print("<table style='border: 1px; width: 100%;'><tr><th>User</th><th>Message</th><th>Delete</th></tr>")
+    cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID;") # stores result from the query
+    for row in cursor:
+      print("""<tr><td>{0}</td><td>{1}</td><td>
+      <form method="post" action="index.py">
+      <input type="hidden" name="del" value="1">
+      <input type="hidden" name="msgID" value=\"""".format(row[5],row[2]),end="")
+      print(row[0],end="")
+      print("""\">
+
+      <input type="hidden" name="uidDel" value=\"""",end="")
+      print(uid,end="") #This will identify the user when posting messages
+      print("""\">
+
+      <input type="submit" value="[d]" style="display: block; margin: auto;"></form>
+      </td></tr>
+      """)
+    print("</table>")
 
   print("""<br>
   <form method="post" action="index.py">
-    <textarea rows="3" cols="40" name="msg" placeholder="Write your message here"></textarea><br>
-    <input type="hidden" name="uid" value=\"""",end="")
+    <textarea rows="3" cols="80" name="msg" placeholder="Write your message here"></textarea><br>
+    <input type="hidden" name="uidPost" value=\"""",end="")
   print(uid,end="") #This will identify the user when posting messages
   print("""\">
     <input type="submit" value="Submit">
-  </form>
+  </form><br><br>
+  <a href="logout.py"><button>Log Out</button></a>
   """,end="")
 
   End()

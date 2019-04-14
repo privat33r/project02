@@ -6,7 +6,7 @@ body {
 }
 
 div.box {
-  width: 300px;
+  width: 600px;
   margin: auto;
   background: rgba(255,255,255,0.7);
   padding: 15px 30px 15px 30px;
@@ -35,8 +35,14 @@ h1:hover {
 
 table {
 	border: 1px solid black;
+  border-collapse: collapse;
+}
+
+tr {
+  border: 1px solid black;
 }
 
 th, td{
-	padding: 2px;
+	padding: 5px 5px 5px 5px;
+  border: 1px solid black;
 }
