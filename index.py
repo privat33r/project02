@@ -77,14 +77,14 @@ if isSession:
   cgitb.enable()
   form = cgi.FieldStorage()
 
-  uid = Input(form.getvalue('uid'))
-  message = Input(form.getvalue('message'))
+  uidPost = Input(form.getvalue('uid'))
+  message = Input(form.getvalue('msg'))
 
-  if uid.content != "None":
+  if uidPost.content != "None":
     if message.content == "None":
       message.content = "<empty message>"
     query = "INSERT INTO MESSAGES (UserID,Message) VALUES (%s,%s);"
-    cursor.execute(query,(uid.content,message.content))
+    cursor.execute(query,(uidPost.content,message.html()))
 
   print(cookie)
 
@@ -102,16 +102,15 @@ if isSession:
   print("""<br>
   <form method="post" action="index.py">
     <textarea rows="3" cols="40" name="msg" placeholder="Write your message here"></textarea><br>
-    <input type="hidden" name="uid" value="
-    """)
+    <input type="hidden" name="uid" value=\"""",end="")
   print(uid,end="") #This will identify the user when posting messages
-  print("""
-  ">
+  print("""\">
     <input type="submit" value="Submit">
   </form>
-  """)
+  """,end="")
 
   End()
+  conn.commit()
   conn.close()
 
 else:
