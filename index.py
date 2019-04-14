@@ -104,14 +104,14 @@ if isSession:
 
   if not isAdmin:
 
-    print("<table style='border: 1px; width: 100%;'><tr> <th>User</th> <th>Message</th> <th>Timestamp</th> <th>Delete</th></tr>")
-    cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID;") # stores result from the query
+    print("<br><table style='border: 1px;'><tr> <th style='width: 70px;'>User</th> <th>Message</th> <th style='width: 150px;'>Timestamp</th> <th style='width: 50px;'>Delete</th></tr>")
+    cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID ORDER BY Timestamp DESC;") # stores result from the query
     for row in cursor:
       print('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>'.format(row[5],row[2],row[3]))
       if row[1] == uid:
         print("""<form method="post" action="index.py">
         <input type="hidden" name="del" value="1">
-        <input type="hidden" name="msgID" value=\"""".format(row[5],row[2]),end="")
+        <input type="hidden" name="msgID" value=\"""",end="")
         print(row[0],end="")
 
         print("""\">
@@ -127,13 +127,13 @@ if isSession:
 
   else:
 
-    print("<table style='border: 1px; width: 100%;'><tr><th>User</th><th>Message</th><th>Delete</th></tr>")
-    cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID;") # stores result from the query
+    print("<br><table style='border: 1px;'><tr> <th style='width: 70px;'>User</th> <th>Message</th> <th style='width: 150px;'>Timestamp</th> <th style='width: 50px;'>Delete</th></tr>")
+    cursor.execute("SELECT * FROM MESSAGES LEFT JOIN USERS ON MESSAGES.UserID=USERS.UserID ORDER BY Timestamp DESC;") # stores result from the query
     for row in cursor:
-      print("""<tr><td>{0}</td><td>{1}</td><td>
+      print("""<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>
       <form method="post" action="index.py">
       <input type="hidden" name="del" value="1">
-      <input type="hidden" name="msgID" value=\"""".format(row[5],row[2]),end="")
+      <input type="hidden" name="msgID" value=\"""".format(row[5],row[2],row[3]),end="")
       print(row[0],end="")
       print("""\">
 

@@ -12,6 +12,13 @@ div.box {
   padding: 15px 30px 15px 30px;
 }
 
+div.box2 {
+  width: 300px;
+  margin: auto;
+  background: rgba(255,255,255,0.7);
+  padding: 15px 30px 15px 30px;
+}
+
 input {
   font-family: inherit;
   margin: 2px;
@@ -36,6 +43,8 @@ h1:hover {
 table {
 	border: 1px solid black;
   border-collapse: collapse;
+  width: 600px;
+  table-layout: fixed;
 }
 
 tr {
@@ -45,4 +54,5 @@ tr {
 th, td{
 	padding: 5px 5px 5px 5px;
   border: 1px solid black;
+  word-wrap: break-word;
 }
