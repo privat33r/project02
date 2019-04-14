@@ -8,6 +8,7 @@ body {
 div.box {
   width: 600px;
   margin: auto;
+  margin-bottom: 100px;
   background: rgba(255,255,255,0.7);
   padding: 15px 30px 15px 30px;
 }

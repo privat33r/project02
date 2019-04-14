@@ -167,5 +167,6 @@ else:
   print()
   pageParts = page.read().split("<span id='error'></span>")
   print(pageParts[0])
-  print("Invalid Username and Password combination/Cookie<br><br>")
+  if submit.content=="browser":
+    print("Invalid Username and Password combination.<br><br>")
   print(pageParts[1])
