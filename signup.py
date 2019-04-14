@@ -10,27 +10,13 @@ import sys
 import re
 import cgi
 import cgitb; cgitb.enable()
-from helper import End # neat way of ending the page
+from helper import * # helper scripts
 import hashlib
 
 from inputClass import Input #this is to escape characters when dealing with user inputs
 
-print("Content-Type: text/html")
-print()
-print("<!DOCTYPE html>")
-print("""
-<html lang="en">
-<head>
-  <title>All aBoard Message Board</title>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="shortcut icon" href="bubble.ico"/>
-</head>
-<body>
-  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.html';">All aBoard Message Board</h1>
-
-  <div class="box">
-  """)
+# Start() from helper scripts print
+Start("Registration")
 
 try:
   conn = mysql.connector.connect(user=config.USER, password=config.PASSWORD, host=config.HOST, database=config.DATABASE)
@@ -53,6 +39,13 @@ form = cgi.FieldStorage()
 user = Input(form.getvalue('user'))
 password = Input(form.getvalue('pass'))
 password2 = Input(form.getvalue('pass2'))
+
+if len(user.content) < 4: #checks if passwords match
+  print("""<h2 style="text-align: center;">Registration Failed</h2>""")
+  print("Username needs to be at least 4 characters.<br><br>")
+  print('<button onclick="window.history.back();">Go Back</button>')
+  End()
+  sys.exit(0)
 
 # Checks if username is already taken
 cursor.execute("SELECT * FROM USERS")
@@ -92,10 +85,9 @@ if len(password.content) < 6:
 
 # Passed all checks, preparing query
 query = "INSERT INTO USERS (Username,Password,Admin) VALUES (%s,%s,0);"
-hash256 = hashlib.sha256()
-prepared = password.content + user.content
-hash256.update(prepared.encode())
-pwHash = hash256.hexdigest()
+
+# Calls getHash from helper.py
+pwHash = getHash(user.content,password.content)
 
 try:
   cursor.execute(query,(user.content,pwHash))
@@ -109,7 +101,9 @@ except mysql.connector.Error as err:
   print (" for statement" + cursor.statement )
   print ('</p>')
 
-print("Your account <i>{0}</i> has been successfully registered!".format(user.html()))
+print("""<h2 style="text-align: center;">Registration Successful</h2>""")
+print("Your account <i>{0}</i> has been successfully registered!<br><br>".format(user.html()))
+print('<button onclick="window.location.href=\'index.py\';">Home</button>')
 
 
 End()

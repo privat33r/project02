@@ -32,3 +32,11 @@ h2 {
 h1:hover {
   cursor: pointer;
 }
+
+table {
+	border: 1px solid black;
+}
+
+th, td{
+	padding: 2px;
+}

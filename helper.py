@@ -1,3 +1,44 @@
+import hashlib
+
+class Input:
+  def __init__(self,str_in):
+    if str_in == None: #In case no input given
+      str_in = "None"
+    self.content = str_in
+    return
+
+  #In case the class was used as string
+  def __str__(self):
+    return self.content
+
+  #Returns a string that is HTML-friendly
+  def html(self):
+    str_in = self.content
+    if str_in != None:
+      str_in = str_in.replace("&","&amp;")
+      str_in = str_in.replace("<","&lt;")
+      str_in = str_in.replace(">","&gt;")
+      str_in = str_in.replace('"',"&quot;")
+    return str_in
+
+def Start(title):
+  print("Content-Type: text/html")
+  print()
+  print("<!DOCTYPE html>")
+  print("""
+  <html lang="en">
+  <head>
+    <title>All aBoard Message Board - """+title+"""</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="bubble.ico"/>
+  </head>
+  <body>
+    <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.py';">All aBoard Message Board</h1>
+
+    <div class="box">
+    """)
+
 def End():
   print("""
     </div>
@@ -20,3 +61,10 @@ def End():
   </body>
   </html>
   """)
+
+def getHash(un,pw):
+  hash256 = hashlib.sha256()
+  prepared = str(pw) + str(un)
+  hash256.update(prepared.encode())
+  pwHash = hash256.hexdigest()
+  return pwHash

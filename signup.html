@@ -8,29 +8,40 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="shortcut icon" href="bubble.ico"/>
 
-  <script>
+  <script> //Performs client-side input validation
   function submitValidation(){
     var pw1 = document.getElementById("pass").value;
     var pw2 = document.getElementById("pass2").value;
     var user = document.getElementById("user").value;
 
     if (pw1 === pw2){
-      if (user.length < 3){
+      document.getElementById("pass2").style = 'border: inherit;';
+
+      if (user.length < 4){
         document.getElementById("user").style = 'border: 3px solid rgba(255,0,0,0.8)';
-        document.getElementById("error").innerHTML = 'Username cannot be less than 3 characters long.<br><br>';
+        document.getElementById("error").innerHTML = 'Username cannot be less than 4 characters long.<br><br>';
         return false;
       }
+      else {
+        document.getElementById("user").style = 'border: inherit;';
+      }
 
-      else if (pw1.length < 6){
+      if (pw1.length < 6){
         document.getElementById("pass").style = 'border: 3px solid rgba(255,0,0,0.8)';
         document.getElementById("error").innerHTML = 'Password need to be at least 6 characters.<br><br>';
         return false;
       }
+      else {
+        document.getElementById("pass").style = 'border: inherit;';
+      }
 
-      else if (!/\d/.test(pw1)) {
+      if (!/\d/.test(pw1)) {
         document.getElementById("pass").style = 'border: 3px solid rgba(255,0,0,0.8)';
         document.getElementById("error").innerHTML = 'Password needs to contain at least one number.<br><br>';
         return false;
+      }
+      else {
+        document.getElementById("pass").style = 'border: inherit;';
       }
     }
 
@@ -47,7 +58,7 @@
 
 </head>
 <body>
-  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.html';">All aBoard Message Board</h1>
+  <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.py';">All aBoard Message Board</h1>
 
   <div class="box">
     <h2 style="text-align: center;">Registration</h2>
@@ -60,7 +71,7 @@
     </form>
   </div><br>
   <div class="box">
-    <a href="index.html">Home</a>
+    <a href="index.py">Home</a>
   </div>
 
   <!-- ***************************************************************
