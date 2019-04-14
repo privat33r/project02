@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
+
+#Created: 12Apr19
+#Author:
+
+#Description: Makes cookie expire, clears session, and directs user to login page.
+
 import cgi                #after succesful login, call Shield's function to redirect to message board
 import cgitb
-import re, sys
+import sys
 import mysql.connector
 from mysql.connector import errorcode
 import config

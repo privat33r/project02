@@ -1,5 +1,7 @@
 import hashlib
 
+
+#Defines input class to help escape problematic characters
 class Input:
   def __init__(self,str_in):
     if str_in == None: #In case no input given
@@ -21,6 +23,7 @@ class Input:
       str_in = str_in.replace('"',"&quot;")
     return str_in
 
+#Automatically prints out the first part of the website, taking a customizable title.
 def Start(title):
   print("Content-Type: text/html")
   print()
@@ -39,6 +42,7 @@ def Start(title):
     <div class="box">
     """)
 
+#Automatically prints out the final part of the website.
 def End():
   print("""
     </div>
@@ -62,6 +66,7 @@ def End():
   </html>
   """)
 
+#Takes two string inputs and concatenates them based on pre-determined manner.
 def getHash(un,pw):
   hash256 = hashlib.sha256()
   prepared = str(pw) + str(un)
