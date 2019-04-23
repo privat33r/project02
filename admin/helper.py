@@ -33,11 +33,11 @@ def Start(title):
   <head>
     <title>All aBoard Message Board - """+title+"""</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="shortcut icon" href="bubble.ico"/>
+    <link rel="stylesheet" href="http://midn.cs.usna.edu/~m207026/project02/styles.css">
+    <link rel="shortcut icon" href="http://midn.cs.usna.edu/~m207026/project02/bubble.ico"/>
   </head>
   <body>
-    <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='index.py';">All aBoard Message Board</h1>
+    <h1 style="margin-top: 100px; text-align: center; color: #ffffff;" onclick="window.location.href='http://midn.cs.usna.edu/~m207026/project02/index.py';">All aBoard Message Board</h1>
 
     <div class="box">
     """)
@@ -46,21 +46,6 @@ def Start(title):
 def End():
   print("""
     </div>
-
-    <!-- ***************************************************************
-       Below this point is text you should include on every SY306 page
-       *************************************************************** -->
-    <!-- Below are scripts which create a button you can click on to validate your page.
-         The background will load green or red if the HTML is valid or not.
-         The time at which the page was last modified will also be displayed below the button -->
-  <link href="http://courses.cyber.usna.edu/SY306/docs/check.css" rel="stylesheet">
-
-    <script>
-      document.write('<div id="response"><a href="http://csmidn.academy.usna.edu:8888/?showsource=yes&doc=' + document.location + '">' +
-                 '<img src="http://courses.cyber.usna.edu/SY306/docs/check.py"' + 'alt="HTML Check" height="60" />' +
-                 '</a><div id="time"></div></div>');
-    </script>
-    <script src="http://courses.cyber.usna.edu/SY306/docs/time.js" ></script>
 
   </body>
   </html>

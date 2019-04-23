@@ -1,0 +1,5 @@
+DirectoryIndex index.py
+AuthType Digest
+AuthName "project02"
+AuthUserFile /home/mids/m207026/public_html/project02/admin/.htpasswd
+Require valid-user

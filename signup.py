@@ -46,6 +46,12 @@ if len(user.content) < 4: #checks if passwords match
   print('<button onclick="window.history.back();">Go Back</button>')
   End()
   sys.exit(0)
+elif len(user.content) > 32:
+  print("""<h2 style="text-align: center;">Registration Failed</h2>""")
+  print("Username cannot be more than 32 characters. Fix yo self.<br><br>")
+  print('<button onclick="window.history.back();">Go Back</button>')
+  End()
+  sys.exit(0)
 
 # Checks if username is already taken
 cursor.execute("SELECT * FROM USERS")
@@ -94,6 +100,11 @@ try:
   cursor.close()
   conn.commit()
   conn.close()
+
+  print("""<h2 style="text-align: center;">Registration Successful</h2>""")
+  print("Your account <i>{0}</i> has been successfully registered!<br><br>".format(user.html()))
+  print('<button onclick="window.location.href=\'login.html\';">Log in</button>')
+
 except mysql.connector.Error as err:
   #for DEBUG only we'll print the error and statement- we should print some generic message instead of production site
   print ('<p style = "color:red">')
@@ -101,9 +112,7 @@ except mysql.connector.Error as err:
   print (" for statement" + cursor.statement )
   print ('</p>')
 
-print("""<h2 style="text-align: center;">Registration Successful</h2>""")
-print("Your account <i>{0}</i> has been successfully registered!<br><br>".format(user.html()))
-print('<button onclick="window.location.href=\'login.html\';">Log in</button>')
-
+  print("""<h2 style="text-align: center;">Registration Failure</h2>""")
+  print('<button onclick="window.history.back();">Go Back</button>')
 
 End()

@@ -29,23 +29,17 @@ cursor = conn.cursor()
 # Checks for cookie
 cookie = cookies.SimpleCookie()
 string_cookie = os.environ.get('HTTP_COOKIE')
-
-# Determines request type, if a HTTP request is being made
 request = os.environ.get('REQUEST_METHOD')
 
 isSession = False
 isAdmin = False
 sid = 0
-# Stores current time
-current = repr(time.time())
-welcome_message = ""
 
 cgitb.enable()
 form = cgi.FieldStorage()
 
 submit = Input(form.getvalue('src')) # Hidden field that weakly associates request with a browser input
 
-#GET requests will be ignored
 if request == "POST":
   #get values from login
   user = Input(form.getvalue('user'))
@@ -57,56 +51,23 @@ if request == "POST":
 if string_cookie:
   cookie.load(string_cookie)
 
-  if 'sid' in cookie
-
-    #Obtains cookie information from user
-    userCookie = cookie['sid'].value
-
-    #Access shelved file, if it exists
-    session_file = '/tmp/sess_' + userCookie
-    session = shelve.open(session_file, writeback=True)
-
-    #Obtains lastvisit time, which was used to generate hash
-    lastvisit = session.get('lastvisit')
-
-    if lastvisit:
-       welcome_message = 'Welcome back. Your last visit was at ' + time.asctime(time.localtime(float(lastvisit))) + '<br>'
-
-    session.close()
+  if 'sid' in cookie:
+    userCookie = cookie['sid'].value[64:]
+    sneakyHash = cookie['sid'].value[:64]
 
     query = "SELECT * FROM USERS;" #get rows from USERS
     cursor.execute(query)
 
     for row in cursor:
-      #Checks if user is in database
-      if row[1] == userCookie[64:]:
+      if row[1] == userCookie:
         #Checks if the cookie is valid
-        sid = getHash(row[2],lastvisit) + userCookie[64:]
-        if userCookie == sid:
+        sid = getHash(row[2],str(7 * 24 * 60 * 60))
+        if sneakyHash == sid:
           isSession = True
           uid = row[0]
-          #Updates SID, refreshes cookie
-          sid = getHash(row[2],current) + userCookie[64:]
-          cookie['sid'] = sid
           cookie['sid']['expires'] = 1 * 1 * 60 * 60 #Renews the cookie
-          cookie['sid']['httponly'] = 1
           if row[3] == 1:
             isAdmin = True
-
-          #deletes old shelved file
-          session = shelve.open(session_file, writeback=True)
-          #clear session data
-          session.clear()
-          #remove session file
-          session.close()
-          os.remove(session_file)
-
-          #Allows persistence of cookie
-          #creates new shelved file
-          session_file = '/tmp/sess_' + sid
-          session = shelve.open(session_file, writeback=True)
-          session['lastvisit'] = current
-          session.close()
 
 #once user presses log in button
 if submit.content=="browser":
@@ -116,8 +77,8 @@ if submit.content=="browser":
   for row in cursor:
     if row[1] == user.content:
       if pwHash == row[2]:
-        # Hashing the password hash with shelved time so we don't store the actual hash in the cookie
-        sid = getHash(row[2],current) + user.content
+        # Hashing the password hash with some predetermined value so we don't store the actual hash in the cookie
+        sid = getHash(row[2],str(7 * 24 * 60 * 60)) + user.content
         cookie['sid'] = sid
         cookie['sid']['expires'] = 1 * 1 * 60 * 60 #set cookie to expire in 1 hour
         cookie['sid']['httponly'] = 1 #prevents javascript XSS
@@ -125,12 +86,6 @@ if submit.content=="browser":
         uid = row[0]
         if row[3] == 1: #checks to see if user is admin, sets isAdmin to true if yes
           isAdmin = True
-
-        #Allows persistence of cookie
-        session_file = '/tmp/sess_' + sid
-        session = shelve.open(session_file, writeback=True)
-        session['lastvisit'] = current
-        session.close()
 
 if isSession:
 
@@ -162,7 +117,17 @@ if isSession:
   #prints out the first part of the website using helper function Start()
   Start("Message Board")
 
-  print(welcome_message)
+  #Allows persistence of cookie
+  session_file = '/tmp/sess_' + sid
+  session = shelve.open(session_file, writeback=True)
+
+  lastvisit = session.get('lastvisit')
+  if lastvisit:
+     message = 'Welcome back. Your last visit was at ' + time.asctime(time.localtime(float(lastvisit))) + '<br>'
+     print(message)
+
+  session['lastvisit'] = repr(time.time())
+  session.close()
 
   if not isAdmin:
 
@@ -219,10 +184,7 @@ if isSession:
   print(uid,end="") #This will identify the user when posting messages
   print("""\">
     <input type="submit" value="Submit">
-  </form><br>""")
-  if isAdmin:
-    print('<a href="http://midn.cs.usna.edu/~m207026/project02/admin">Admin Panel</a><br>')
-  print("""<br>
+  </form><br><br>
   <a href="logout.py"><button>Log Out</button></a>
   """,end="")
 
@@ -234,7 +196,6 @@ if isSession:
 else:
   page = open("login.html")
   print("Content-Type: text/html")
-  print("X-XSS-Protection: 1; mode=block")
   print()
   pageParts = page.read().split("<span id='error'></span>")
   print(pageParts[0])
